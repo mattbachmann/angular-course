@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Inject, Injector, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Inject, Injector, OnInit, signal} from '@angular/core';
 import {Course} from './model/course';
 import {Observable} from 'rxjs';
 import {AppConfig, CONFIG_TOKEN} from './config';
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
 
   coursesTotal = this.courses.length;
 
-  counter = 0;
+  counter = signal(0);
 
   constructor(
     private coursesService: CoursesService,
@@ -60,6 +60,6 @@ export class AppComponent implements OnInit {
 
 
   increment() {
-    this.counter++;
+    this.counter.set(this.counter() + 1);
   }
 }
