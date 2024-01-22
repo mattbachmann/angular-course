@@ -24,37 +24,42 @@ import {NgForOf} from '@angular/common';
 })
 export class AppComponent implements OnInit {
 
-    courses: Course[] = COURSES;
+  courses: Course[] = COURSES;
 
-    coursesTotal = this.courses.length;
+  coursesTotal = this.courses.length;
 
-    constructor(
-        private coursesService: CoursesService,
-        @Inject(CONFIG_TOKEN) private config: AppConfig,
-        private injector: Injector) {
+  counter = 0;
 
-    }
+  constructor(
+    private coursesService: CoursesService,
+    @Inject(CONFIG_TOKEN) private config: AppConfig,
+    private injector: Injector) {
 
-    ngOnInit() {
+  }
+
+  ngOnInit() {
 
     const htmlElement = createCustomElement(CourseTitleComponent, {injector: this.injector});
 
     customElements.define('course-title', htmlElement);
 
-    }
+  }
 
-    onEditCourse() {
+  onEditCourse() {
 
-            this.courses[1].category = 'ADVANCED';
+    this.courses[1].category = 'ADVANCED';
 
-    }
+  }
 
-    save(course: Course) {
-        this.coursesService.saveCourse(course)
-            .subscribe(
-                () => console.log('Course Saved!')
-            );
-    }
+  save(course: Course) {
+    this.coursesService.saveCourse(course)
+      .subscribe(
+        () => console.log('Course Saved!')
+      );
+  }
 
 
+  increment() {
+    this.counter++;
+  }
 }

@@ -15,6 +15,8 @@
   </div>
 
   <div class="courses">
+    <div> Counter: {{counter}}</div>
+    <button (click)="increment()">Increment counter</button>
 
     <course-card *ngFor="let course of  courses  "
                  (courseChanged)="save($event)"
