@@ -24,11 +24,16 @@ import {NgForOf} from '@angular/common';
 })
 export class AppComponent implements OnInit {
 
-  courses: Course[] = COURSES;
+  courses = signal(['Angular For Beginners', 'Reactive Angular Course']);
 
-  coursesTotal = this.courses.length;
+  coursesTotal = this.courses().length;
 
   counter = signal(0);
+
+  course = signal({
+    id: 1,
+    title: 'Angular For Beginners',
+  })
 
   constructor(
     private coursesService: CoursesService,
@@ -61,5 +66,16 @@ export class AppComponent implements OnInit {
   increment() {
     const readOnlySignal = this.counter.asReadonly();
     this.counter.update(val => val + 1);
+
+    // Not the proper way - will not work with Change-Detection-On-Push:
+    // this.course().title = 'Hello World';
+    // this.courses().push('Angular Core Deep Dive');
+
+    this.course.set({
+      id: 1,
+      title: 'Hello World',
+    });
+
+    this.courses.update(courses => [...courses, 'Angular Core Deep Dive']);
   }
 }

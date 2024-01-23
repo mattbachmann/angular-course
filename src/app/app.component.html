@@ -18,14 +18,18 @@
     <div> Counter: {{ counter() }}</div>
     <button (click)="increment()">Increment counter</button>
 
-    <course-card *ngFor="let course of  courses  "
-                 (courseChanged)="save($event)"
-                 type="beginner"
-                 [course]="course">
+    <div>Course Title: {{course().title}}</div>
 
-      <course-image [src]="course.iconUrl"></course-image>
+    <div>Courses: {{courses().join(', ')}}</div>
 
-    </course-card>
+<!--    <course-card *ngFor="let course of  courses  "-->
+<!--                 (courseChanged)="save($event)"-->
+<!--                 type="beginner"-->
+<!--                 [course]="course">-->
+
+<!--      <course-image [src]="course.iconUrl"></course-image>-->
+
+<!--    </course-card>-->
 
 
   </div>
