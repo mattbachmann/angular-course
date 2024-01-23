@@ -34,7 +34,6 @@ export class AppComponent implements OnInit {
     private coursesService: CoursesService,
     @Inject(CONFIG_TOKEN) private config: AppConfig,
     private injector: Injector) {
-
   }
 
   ngOnInit() {
@@ -60,6 +59,7 @@ export class AppComponent implements OnInit {
 
 
   increment() {
-    this.counter.set(this.counter() + 1);
+    const readOnlySignal = this.counter.asReadonly();
+    this.counter.update(val => val + 1);
   }
 }
