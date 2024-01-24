@@ -16,7 +16,11 @@
 
   <div class="courses">
     <div> Counter: {{ counter() }}</div>
+    <div> Derived Counter: {{ derivedCounter() }}</div>
+    <div> Multiplier: {{ multiplier }}</div>
     <button (click)="increment()">Increment counter</button>
+    <button (click)="incrementMultiplier()">Increment Multiplier</button>
+    <button (click)="onCleanUp()">Clean up</button>
 
     <div>Course Title: {{course().title}}</div>
 

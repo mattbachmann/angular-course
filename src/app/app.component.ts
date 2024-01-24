@@ -1,8 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Inject, Injector, OnInit, signal} from '@angular/core';
+import {Component, computed, effect, EffectRef, Inject, Injector, OnInit, signal} from '@angular/core';
 import {Course} from './model/course';
-import {Observable} from 'rxjs';
 import {AppConfig, CONFIG_TOKEN} from './config';
-import {COURSES} from '../db-data';
 import {CoursesService} from './courses/courses.service';
 import {createCustomElement} from '@angular/elements';
 import {CourseTitleComponent} from './course-title/course-title.component';
@@ -30,15 +28,44 @@ export class AppComponent implements OnInit {
 
   counter = signal(0);
 
+  multiplier = 1;
+
+  // Cannot update - derived signals are readonly
+  derivedCounter = computed(() => {
+    // if (this.multiplier >= 10) {
+    //   return this.counter() * 10; // will never be reached - no dependency created initially
+    // } else {
+    //   return 0;
+    // }
+    const counter = this.counter(); // dependency is established initially
+    return this.multiplier >= 10 ? counter * 10 : 0;
+  });
+
   course = signal({
     id: 1,
     title: 'Angular For Beginners',
   })
 
+  effectRef: EffectRef;
+
   constructor(
     private coursesService: CoursesService,
     @Inject(CONFIG_TOKEN) private config: AppConfig,
     private injector: Injector) {
+
+    // effect is normally cleaned up automatically in onDestroy, but could also be done manually with .destroy()
+    this.effectRef = effect((onCleanup) => {
+      const counterValue = this.counter();
+      const derivedCounterValue = this.derivedCounter();
+      console.log(`counter: ${counterValue}`);
+
+      onCleanup(() => {
+        console.log(`Cleanup occured!`);
+      });
+    }, {
+      manualCleanup: true,
+    });
+
   }
 
   ngOnInit() {
@@ -77,5 +104,13 @@ export class AppComponent implements OnInit {
     });
 
     this.courses.update(courses => [...courses, 'Angular Core Deep Dive']);
+  }
+
+  incrementMultiplier() {
+    this.multiplier++;
+  }
+
+  onCleanUp() {
+    this.effectRef.destroy();
   }
 }
