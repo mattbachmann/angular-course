@@ -15,7 +15,7 @@
   </div>
 
   <div class="courses">
-    <div> Counter: {{ counter() }}</div>
+    <div> Counter: {{ counterService.counter() }}</div>
     <div> Derived Counter: {{ derivedCounter() }}</div>
     <div> Multiplier: {{ multiplier }}</div>
     <button (click)="increment()">Increment counter</button>

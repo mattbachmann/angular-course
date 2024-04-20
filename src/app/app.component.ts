@@ -7,6 +7,7 @@ import {CourseTitleComponent} from './course-title/course-title.component';
 import {CourseCardComponent} from './courses/course-card/course-card.component';
 import {CourseImageComponent} from './courses/course-image/course-image.component';
 import {NgForOf} from '@angular/common';
+import {CounterService} from './services/counter.service';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class AppComponent implements OnInit {
 
   coursesTotal = this.courses().length;
 
-  counter = signal(0);
+  counter = this.counterService.counter();
 
   multiplier = 1;
 
@@ -37,7 +38,7 @@ export class AppComponent implements OnInit {
     // } else {
     //   return 0;
     // }
-    const counter = this.counter(); // dependency is established initially
+    const counter = this.counterService.counter(); // dependency is established initially
     return this.multiplier >= 10 ? counter * 10 : 0;
   });
 
@@ -51,13 +52,16 @@ export class AppComponent implements OnInit {
   constructor(
     private coursesService: CoursesService,
     @Inject(CONFIG_TOKEN) private config: AppConfig,
-    private injector: Injector) {
+    private injector: Injector,
+    protected counterService: CounterService) {
 
     // effect is normally cleaned up automatically in onDestroy, but could also be done manually with .destroy()
     this.effectRef = effect((onCleanup) => {
-      const counterValue = this.counter();
+      const counterValue = this.counterService.counter();
       const derivedCounterValue = this.derivedCounter();
       console.log(`counter: ${counterValue}`);
+
+      // this.counterService.increment(); // Not allowed - cannot mutate signal in side effect
 
       onCleanup(() => {
         console.log(`Cleanup occured!`);
@@ -91,8 +95,7 @@ export class AppComponent implements OnInit {
 
 
   increment() {
-    const readOnlySignal = this.counter.asReadonly();
-    this.counter.update(val => val + 1);
+    this.counterService.increment();
 
     // Not the proper way - will not work with Change-Detection-On-Push:
     // this.course().title = 'Hello World';
